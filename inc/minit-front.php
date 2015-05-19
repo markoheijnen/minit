@@ -91,13 +91,13 @@ class Minit_Front {
 			}
 
 			// Skip if the file is not hosted locally
-			if ( ! $src || ! file_exists( $src ) ) {
+			if ( ! $src || ! file_exists( $src->base . $src->path ) ) {
 				continue;
 			}
 
 			$script_content = apply_filters(
 				'minit-item-' . $extension,
-				file_get_contents( $src ),
+				file_get_contents( $src->base . $src->path ),
 				$object,
 				$script
 			);

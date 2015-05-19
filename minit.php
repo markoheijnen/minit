@@ -76,11 +76,11 @@ class Minit {
 		$maybe_relative = end( $src_parts );
 
 		if ( file_exists( ABSPATH . $maybe_relative ) ) {
-			return ABSPATH . $maybe_relative;
+			return (object) array( 'path' => $maybe_relative, 'base' => ABSPATH );
 		}
 
 		if ( file_exists( WP_CONTENT_DIR . $maybe_relative ) ) {
-			return WP_CONTENT_DIR . $maybe_relative;
+			return (object) array( 'path' => $maybe_relative, 'base' => WP_CONTENT_DIR );
 		}
 
 		return false;
@@ -137,14 +137,14 @@ class Minit {
 		}
 
 		$src = $this->get_asset_relative_path(
-			$object->base_url,
+			$object->content_url,
 			$object->registered[ $script ]->src
 		);
 
 		// Make all local asset URLs absolute
 		$content = preg_replace(
 			'/url\(["\' ]?+(?!data:|https?:|\/\/)(.*?)["\' ]?\)/i',
-			sprintf( "url('%s/$1')", dirname( $src ) ),
+			sprintf( "url('%s/$1')", $object->content_url . dirname( $src->path ) ),
 			$content
 		);
 
@@ -159,14 +159,14 @@ class Minit {
 		}
 
 		$src = $this->get_asset_relative_path(
-			$object->base_url,
+			$object->content_url,
 			$object->registered[ $script ]->src
 		);
 
 		// Make all import asset URLs absolute
 		$content = preg_replace(
 			'/@import\s+(url\()?["\'](?!https?:|\/\/)(.*?)["\'](\)?)/i',
-			sprintf( "@import url('%s/$2')", dirname( $src ) ),
+			sprintf( "@import url('%s/$2')", $object->base_url . dirname( $src->path ) ),
 			$content
 		);
 
