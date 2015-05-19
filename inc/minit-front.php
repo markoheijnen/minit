@@ -254,7 +254,7 @@ class Minit_Front {
 		}
 
 		$minit         = Minit::instance();
-		$base_url      = site_url();
+		$base_url      = home_url();
 		$minit_exclude = (array) apply_filters( 'minit-exclude-js', array() );
 
 		foreach ( $wp_scripts->queue as $handle ) {
