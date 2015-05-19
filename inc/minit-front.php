@@ -81,7 +81,7 @@ class Minit_Front {
 		foreach ( $minit_todo as $script ) {
 			// Get the relative URL of the asset
 			$src = $minit->get_asset_relative_path(
-				$object->base_url,
+				$object->content_url,
 				$object->registered[ $script ]->src
 			);
 
@@ -91,13 +91,13 @@ class Minit_Front {
 			}
 
 			// Skip if the file is not hosted locally
-			if ( ! $src || ! file_exists( ABSPATH . $src ) ) {
+			if ( ! $src || ! file_exists( $src ) ) {
 				continue;
 			}
 
 			$script_content = apply_filters(
 				'minit-item-' . $extension,
-				file_get_contents( ABSPATH . $src ),
+				file_get_contents( $src ),
 				$object,
 				$script
 			);

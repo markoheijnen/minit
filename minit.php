@@ -75,11 +75,15 @@ class Minit {
 		// Get the trailing part of the local URL
 		$maybe_relative = end( $src_parts );
 
-		if ( ! file_exists( ABSPATH . $maybe_relative ) ) {
-			return false;
+		if ( file_exists( ABSPATH . $maybe_relative ) ) {
+			return ABSPATH . $maybe_relative;
 		}
 
-		return $maybe_relative;
+		if ( file_exists( WP_CONTENT_DIR . $maybe_relative ) ) {
+			return WP_CONTENT_DIR . $maybe_relative;
+		}
+
+		return false;
 	}
 
 	public function purge_cache( $hard = false ) {
@@ -140,7 +144,7 @@ class Minit {
 		// Make all local asset URLs absolute
 		$content = preg_replace(
 			'/url\(["\' ]?+(?!data:|https?:|\/\/)(.*?)["\' ]?\)/i',
-			sprintf( "url('%s/$1')", $object->base_url . dirname( $src ) ),
+			sprintf( "url('%s/$1')", dirname( $src ) ),
 			$content
 		);
 
@@ -162,7 +166,7 @@ class Minit {
 		// Make all import asset URLs absolute
 		$content = preg_replace(
 			'/@import\s+(url\()?["\'](?!https?:|\/\/)(.*?)["\'](\)?)/i',
-			sprintf( "@import url('%s/$2')", $object->base_url . dirname( $src ) ),
+			sprintf( "@import url('%s/$2')", dirname( $src ) ),
 			$content
 		);
 
